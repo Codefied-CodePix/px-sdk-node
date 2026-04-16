@@ -4,6 +4,8 @@ export type {
   FailMode,
   ProjectStatus,
   SdkConfig,
+  SdkVersionCatalog,
+  SdkVersionInfo,
   ServerMessage,
   StatusPayload,
   RevokedPayload,

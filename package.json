@@ -1,43 +1,61 @@
 {
   "name": "@pxcontrol/sdk",
   "version": "0.1.0",
-  "description": "PXControl SDK — remote application lifecycle control middleware for Node.js backends.",
+  "description": "PXControl SDK — remote application lifecycle control middleware for Node.js (Express, Fastify, NestJS).",
   "license": "MIT",
+  "author": "PXControl <hello@pxcontrol.io>",
+  "homepage": "https://pxcontrol.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pxcontrol/px-sdk-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pxcontrol/px-sdk-node/issues"
+  },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     }
   },
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "test": "vitest run",
     "lint": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "verify:version": "node -e \"const p=require('./package.json'),f=require('fs').readFileSync('src/version.ts','utf8');const m=f.match(/SDK_VERSION = '([^']+)'/);if(!m||m[1]!==p.version){console.error('version.ts ('+m?.[1]+') does not match package.json ('+p.version+')');process.exit(1);}\"",
+    "prepublishOnly": "npm run verify:version && npm run lint && npm run build"
   },
   "keywords": [
+    "pxcontrol",
     "middleware",
     "health",
     "monitoring",
     "kill-switch",
     "lifecycle",
+    "feature-flag",
     "circuit-breaker",
     "express",
     "fastify",
-    "nestjs"
+    "nestjs",
+    "websocket",
+    "remote-control"
   ],
   "engines": {
     "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "ws": "^8.17.0"
