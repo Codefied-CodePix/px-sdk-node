@@ -4,6 +4,20 @@ All notable changes to `pxcontrol-sdk` will be documented here. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.2] - 2026-04-18
+
+### Changed
+- Package metadata now points at the canonical repository
+  [`Codefied-CodePix/px-sdk-node`](https://github.com/Codefied-CodePix/px-sdk-node)
+  (`homepage`, `repository`, `bugs`).
+- README badges updated to link to the real repository.
+
+### Deprecated
+- **Versions `0.1.1` and below are deprecated.** The backend's
+  `/api/v1/sdk/versions` endpoint now advertises `0.1.2` as the minimum
+  supported release. Older versions still function, but the SDK will emit
+  an `update-available` event and a warning at startup until you upgrade.
+
 ## [0.1.1] - 2026-04-17
 
 ### Changed

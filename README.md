@@ -2,9 +2,12 @@
 
 [![npm version](https://img.shields.io/npm/v/pxcontrol-sdk.svg?logo=npm&label=pxcontrol-sdk)](https://www.npmjs.com/package/pxcontrol-sdk)
 [![npm downloads](https://img.shields.io/npm/dm/pxcontrol-sdk.svg?logo=npm)](https://www.npmjs.com/package/pxcontrol-sdk)
+[![Bundle size](https://img.shields.io/bundlephobia/minzip/pxcontrol-sdk?logo=esbuild&label=min%2Bgzip)](https://bundlephobia.com/package/pxcontrol-sdk)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-ready-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Types](https://img.shields.io/npm/types/pxcontrol-sdk.svg?logo=typescript&logoColor=white)](https://www.npmjs.com/package/pxcontrol-sdk)
+[![GitHub stars](https://img.shields.io/github/stars/Codefied-CodePix/px-sdk-node?logo=github&label=stars)](https://github.com/Codefied-CodePix/px-sdk-node)
+[![GitHub issues](https://img.shields.io/github/issues/Codefied-CodePix/px-sdk-node?logo=github)](https://github.com/Codefied-CodePix/px-sdk-node/issues)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 Node.js SDK and middleware for [PXControl](https://pxcontrol.codefied.online) — a remote
@@ -19,6 +22,10 @@ Drop one line of middleware into Express, Fastify, or NestJS and you get:
 - Health-check path is always whitelisted (LBs and probes keep working).
 - Heartbeats so the dashboard can tell you're alive.
 - Zero-config: reads `PX_TOKEN` from the environment.
+
+> **Heads-up:** `0.1.1` and earlier are deprecated. The control-plane API
+> reports `0.1.2` as the minimum supported release — older clients still
+> run but will emit an `update-available` event and a warning at startup.
 
 ---
 
@@ -160,10 +167,27 @@ process.on('SIGTERM', () => {
 
 ## Links
 
+- Source: [`Codefied-CodePix/px-sdk-node`](https://github.com/Codefied-CodePix/px-sdk-node)
+- Issues: [github.com/Codefied-CodePix/px-sdk-node/issues](https://github.com/Codefied-CodePix/px-sdk-node/issues)
+- Changelog: [`CHANGELOG.md`](./CHANGELOG.md)
 - Dashboard: <https://pxcontrol.codefied.online>
 - API: <https://api-pxcontrol.codefied.online>
-- Changelog: [`CHANGELOG.md`](./CHANGELOG.md)
-- Python SDK: [`pxcontrol` on PyPI](https://pypi.org/project/pxcontrol/)
+- Python SDK: [`pxcontrol` on PyPI](https://pypi.org/project/pxcontrol/) ·
+  [source](https://github.com/Codefied-CodePix/px-sdk-py)
+
+## Contributing
+
+PRs welcome. Clone, `npm install`, and run:
+
+```bash
+npm run lint      # tsc --noEmit
+npm run build     # tsup (CJS + ESM + d.ts)
+npm test          # vitest
+```
+
+The `prepublishOnly` hook verifies that `src/version.ts` matches
+`package.json`, then re-runs lint + build before publishing, so you
+cannot ship mismatched versions by accident.
 
 ## License
 
