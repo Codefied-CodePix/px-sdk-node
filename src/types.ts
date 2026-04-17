@@ -44,7 +44,7 @@ export interface SdkVersionCatalog {
 export interface SdkConfig {
   /** Project token (px_xxx). Defaults to `process.env.PX_TOKEN`. */
   token?: string;
-  /** WebSocket base URL. Defaults to `process.env.PX_WS_URL` or `wss://ws.pxcontrol.io`. */
+  /** WebSocket base URL. Defaults to `process.env.PX_WS_URL` or `wss://api-pxcontrol.codefied.online`. */
   wsUrl?: string;
   /** HTTP API base URL used by poll fallback + version check. Derived from `wsUrl` if unset. */
   apiUrl?: string;

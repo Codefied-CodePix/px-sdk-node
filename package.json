@@ -1,10 +1,10 @@
 {
-  "name": "@pxcontrol/sdk",
-  "version": "0.1.0",
+  "name": "pxcontrol-sdk",
+  "version": "0.1.1",
   "description": "PXControl SDK — remote application lifecycle control middleware for Node.js (Express, Fastify, NestJS).",
   "license": "MIT",
-  "author": "PXControl <hello@pxcontrol.io>",
-  "homepage": "https://pxcontrol.io",
+  "author": "PXControl",
+  "homepage": "https://pxcontrol.codefied.online",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pxcontrol/px-sdk-node.git"
@@ -53,9 +53,6 @@
   ],
   "engines": {
     "node": ">=18"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "dependencies": {
     "ws": "^8.17.0"

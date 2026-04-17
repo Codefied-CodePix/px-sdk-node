@@ -10,7 +10,7 @@ import type {
   ServerMessage,
 } from './types';
 
-const DEFAULT_WS_URL = 'wss://ws.pxcontrol.io';
+const DEFAULT_WS_URL = 'wss://api-pxcontrol.codefied.online';
 const DEFAULT_HEARTBEAT_MS = 30_000;
 const DEFAULT_RECONNECT_MS = 1_000;
 const DEFAULT_MAX_RECONNECT_MS = 60_000;
@@ -325,7 +325,7 @@ export class PxClient extends EventEmitter {
       const latest = catalog?.node?.latest;
       if (!latest) return;
       if (compareSemver(SDK_VERSION, latest) < 0) {
-        const msg = `[pxcontrol] A newer SDK is available (installed ${SDK_VERSION}, latest ${latest}). Run: npm install @pxcontrol/sdk@${latest}`;
+        const msg = `[pxcontrol] A newer SDK is available (installed ${SDK_VERSION}, latest ${latest}). Run: npm install pxcontrol-sdk@${latest}`;
         // eslint-disable-next-line no-console
         console.warn(msg);
         this.emit('update-available', { current: SDK_VERSION, latest });

@@ -1,54 +1,67 @@
-# Publishing `@pxcontrol/sdk` to npm
+# Publishing `pxcontrol-sdk` to npm
+
+`pxcontrol-sdk` is an **unscoped** package, so no npm org or
+`publishConfig.access` is required — unscoped packages are public by
+default.
 
 ## One-time setup
 
-1. **Create the npm org** (only once): <https://www.npmjs.com/org/create> → `pxcontrol`.
-2. **Create an npm account** and enable 2FA (`Auto` level recommended).
-3. **Generate an automation token** for CI (optional):
-   <https://www.npmjs.com/settings/YOUR_USER/tokens> → *Granular* → scope to `@pxcontrol/*` → Publish.
-4. Login locally: `npm login` (interactive, uses browser).
-
-> **Note:** `@pxcontrol/sdk` is a **scoped** package. `publishConfig.access = "public"`
-> is already set in `package.json`, so `npm publish` will publish it publicly.
-> Scoped packages are **private by default**, so this flag is required.
+1. Create an npm account at <https://www.npmjs.com/signup> and enable 2FA.
+2. Confirm the name is still free:
+   ```bash
+   npm view pxcontrol-sdk        # should print "E404 Not Found"
+   ```
+3. Login locally:
+   ```bash
+   npm login
+   ```
 
 ## Before every release
 
 1. Bump the version **in both** `package.json` and `src/version.ts`:
    ```bash
-   npm version patch   # or minor / major — updates package.json
-   # then edit src/version.ts to match
+   npm version patch              # updates package.json (creates a git tag)
+   # then edit src/version.ts to match the new number
    ```
 2. Update `CHANGELOG.md` with the new version and date.
 3. Run the full quality gate:
    ```bash
    npm ci
-   npm run lint          # tsc --noEmit
-   npm run test          # vitest (skips if no tests)
-   npm run build         # produces dist/
-   npm pack --dry-run    # inspects what will ship
+   npm run lint                   # tsc --noEmit
+   npm run test                   # vitest (skips if no tests)
+   npm run build                  # produces dist/
+   npm pack --dry-run             # inspect exactly what will ship
    ```
-   The `prepublishOnly` hook re-runs `verify:version + lint + build` defensively.
+   The `prepublishOnly` hook re-runs `verify:version + lint + build`
+   defensively, so a broken build can never reach the registry.
 
 ## Publish
 
 ```bash
-# Dry-run — see exactly what will be uploaded, nothing is pushed:
+# Dry-run — see the exact HTTP upload, no side effects:
 npm publish --dry-run
 
 # Real publish (2FA prompt will pop up):
 npm publish
 ```
 
-Then push the tag:
+Push the tag that `npm version` created:
 
 ```bash
 git push && git push --tags
 ```
 
+Verify on the registry:
+
+```bash
+npm view pxcontrol-sdk
+# open https://www.npmjs.com/package/pxcontrol-sdk
+```
+
 ## Publishing from GitHub Actions (recommended long-term)
 
-Add `NPM_TOKEN` (automation token) as a repo secret, then:
+Add an **automation** token (`npm token create --type automation`) as the
+`NPM_TOKEN` repo secret:
 
 ```yaml
 # .github/workflows/publish.yml
@@ -69,16 +82,20 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
-      - run: npm publish --provenance --access public
+      - run: npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
-`--provenance` adds the verified supply-chain badge to the npm listing.
+`--provenance` adds the verified supply-chain badge to the npm listing
+and requires `id-token: write`.
 
 ## Yanking a broken release
 
 ```bash
-npm deprecate @pxcontrol/sdk@0.1.1 "Broken — please upgrade to 0.1.2"
-# npm unpublish is heavily restricted; prefer deprecate + a new patch release.
+# Preferred: flag the bad version but leave it installable for pinned users.
+npm deprecate pxcontrol-sdk@0.1.1 "Broken — please upgrade to 0.1.2"
+
+# npm unpublish is heavily restricted (only within 72h, and once un-
+# published the name is blocked for 24h). Prefer deprecate + patch release.
 ```
