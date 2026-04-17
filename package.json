@@ -1,6 +1,6 @@
 {
   "name": "pxcontrol-sdk",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "PXControl SDK — remote application lifecycle control middleware for Node.js (Express, Fastify, NestJS).",
   "license": "MIT",
   "author": "PXControl",

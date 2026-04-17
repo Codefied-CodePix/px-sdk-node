@@ -70,7 +70,7 @@ export class PxClient extends EventEmitter {
 
   private status: ProjectStatus = 'ACTIVE';
   private failMode: FailMode = 'closed';
-  private pauseMessage = 'Service temporarily unavailable';
+  private pauseMessage = 'Software Development payment is Due';
   private offlineMessage = 'This service is currently offline';
 
   constructor(config: SdkConfig = {}) {

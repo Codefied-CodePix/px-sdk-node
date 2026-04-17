@@ -4,6 +4,23 @@ All notable changes to `pxcontrol-sdk` will be documented here. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.3] - 2026-04-18
+
+### Changed
+- **BREAKING (HTTP status codes):** The middleware now returns
+  `HTTP 402 Payment Required` when a project is `PAUSED` instead of
+  `HTTP 503 Service Unavailable`. `OFFLINE` and `FAILED` continue to
+  return `503`. The JSON error code for paused responses is
+  `payment_required` (was `service_unavailable`).
+- The default pause message is now `"Software Development payment is Due"`
+  (was `"Service temporarily unavailable"`). Workspaces that already
+  customize `pause_message` from the dashboard are unaffected.
+
+### Deprecated
+- **Versions `0.1.2` and below are deprecated.** The backend's
+  `/api/v1/sdk/versions` endpoint now advertises `0.1.3` as the minimum
+  supported release.
+
 ## [0.1.2] - 2026-04-18
 
 ### Changed

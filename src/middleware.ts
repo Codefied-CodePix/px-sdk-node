@@ -15,9 +15,29 @@ type ExpressNext = (err?: unknown) => void;
 
 const DEFAULT_HEALTH_PATH = '/health';
 
-function buildBlockBody(message: string, status: string) {
+/**
+ * HTTP status code returned for each non-ACTIVE project state.
+ *
+ *  - PAUSED  → 402 Payment Required   (semantic choice: the project is
+ *              intentionally held back; think "invoice past due")
+ *  - OFFLINE → 503 Service Unavailable (temporary outage / maintenance)
+ *  - FAILED  → 503 Service Unavailable (stop-everything emergency)
+ */
+const STATUS_CODE: Record<'PAUSED' | 'OFFLINE' | 'FAILED', number> = {
+  PAUSED: 402,
+  OFFLINE: 503,
+  FAILED: 503,
+};
+
+const ERROR_CODE: Record<'PAUSED' | 'OFFLINE' | 'FAILED', string> = {
+  PAUSED: 'payment_required',
+  OFFLINE: 'service_unavailable',
+  FAILED: 'service_unavailable',
+};
+
+function buildBlockBody(message: string, status: 'PAUSED' | 'OFFLINE' | 'FAILED') {
   return {
-    error: 'service_unavailable',
+    error: ERROR_CODE[status],
     status,
     message,
   };
@@ -39,11 +59,11 @@ export function pxControl(config: SdkConfig = {}) {
     if (status === 'ACTIVE') return next();
 
     if (status === 'PAUSED') {
-      res.status(503).json(buildBlockBody(client.getPauseMessage(), 'PAUSED'));
+      res.status(STATUS_CODE.PAUSED).json(buildBlockBody(client.getPauseMessage(), 'PAUSED'));
       return;
     }
     if (status === 'OFFLINE' || status === 'FAILED') {
-      res.status(503).json(buildBlockBody(client.getOfflineMessage(), status));
+      res.status(STATUS_CODE[status]).json(buildBlockBody(client.getOfflineMessage(), status));
       return;
     }
     return next();
@@ -73,11 +93,11 @@ export async function fastifyPxControl(
     if (status === 'ACTIVE') return;
 
     if (status === 'PAUSED') {
-      reply.code(503).send(buildBlockBody(client.getPauseMessage(), 'PAUSED'));
+      reply.code(STATUS_CODE.PAUSED).send(buildBlockBody(client.getPauseMessage(), 'PAUSED'));
       return;
     }
     if (status === 'OFFLINE' || status === 'FAILED') {
-      reply.code(503).send(buildBlockBody(client.getOfflineMessage(), status));
+      reply.code(STATUS_CODE[status]).send(buildBlockBody(client.getOfflineMessage(), status));
     }
   });
 }
@@ -114,11 +134,11 @@ export class PxControlGuard {
     if (status === 'ACTIVE') return true;
 
     if (status === 'PAUSED') {
-      res.status(503).json(buildBlockBody(this.client.getPauseMessage(), 'PAUSED'));
+      res.status(STATUS_CODE.PAUSED).json(buildBlockBody(this.client.getPauseMessage(), 'PAUSED'));
       return false;
     }
     if (status === 'OFFLINE' || status === 'FAILED') {
-      res.status(503).json(buildBlockBody(this.client.getOfflineMessage(), status));
+      res.status(STATUS_CODE[status]).json(buildBlockBody(this.client.getOfflineMessage(), status));
       return false;
     }
     return true;
